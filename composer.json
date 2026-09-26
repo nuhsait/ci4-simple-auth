@@ -1,0 +1,33 @@
+{
+    "name": "nuhsait/ci4-simple-auth",
+    "description": "A lightweight closed-system authentication library for CodeIgniter 4 supporting HTTP Basic auth, featuring admin-managed user provisioning and seeder-based setup",
+    "type": "library",
+    "keywords": [
+        "codeigniter",
+        "codeigniter4",
+        "auth",
+        "authentication",
+        "basic-auth"
+    ],
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "codeigniter4/framework": "^4.7"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nuhsait\\Ci4SimpleAuth\\": "src/"
+        },
+        "files": [
+            "src/Helpers/auth_helper.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Nuh Sait ULAŞ",
+            "email": "me@nuhsait.com"
+        }
+    ]
+}
