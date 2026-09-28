@@ -29,7 +29,7 @@ class BasicAuth implements FilterInterface
 
         // The password travels almost in plain text on every request, so HTTP is refused.
         if (! $request->isSecure()) {
-            return $response->setStatusCode(403)->setBody('HTTPS is required.');
+            return $this->error($response, 403, 'HTTPS is required.');
         }
 
         $ip       = $request->getIPAddress();
@@ -38,9 +38,8 @@ class BasicAuth implements FilterInterface
         $lockedFor = $throttle->lockedFor($ip);
 
         if ($lockedFor > 0) {
-            return $response->setStatusCode(429)
-                ->setHeader('Retry-After', (string) $lockedFor)
-                ->setBody('Too many failed attempts. Please try again later.');
+            return $this->error($response, 429, 'Too many failed attempts. Please try again later.')
+                ->setHeader('Retry-After', (string) $lockedFor);
         }
 
         $header = $request->getHeaderLine('Authorization');
@@ -107,9 +106,13 @@ class BasicAuth implements FilterInterface
     {
         $realm = addcslashes($config->realm, '"\\');
 
-        return $response->setStatusCode(401)
-            ->setHeader('WWW-Authenticate', 'Basic realm="' . $realm . '", charset="UTF-8"')
-            ->setBody('Authentication required.');
+        return $this->error($response, 401, 'Authentication required.')
+            ->setHeader('WWW-Authenticate', 'Basic realm="' . $realm . '", charset="UTF-8"');
+    }
+
+    private function error(ResponseInterface $response, int $status, string $message): ResponseInterface
+    {
+        return $response->setStatusCode($status)->setJSON(['error' => $message]);
     }
 
     /**
