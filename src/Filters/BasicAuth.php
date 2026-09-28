@@ -112,7 +112,13 @@ class BasicAuth implements FilterInterface
 
     private function error(ResponseInterface $response, int $status, string $message): ResponseInterface
     {
-        return $response->setStatusCode($status)->setJSON(['error' => $message]);
+        $response->setStatusCode($status);
+
+        return $response->setJSON([
+            'status'  => $status,
+            'error'   => $response->getReasonPhrase(),
+            'message' => $message,
+        ]);
     }
 
     /**
