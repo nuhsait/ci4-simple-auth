@@ -110,14 +110,13 @@ class BasicAuth implements FilterInterface
             ->setHeader('WWW-Authenticate', 'Basic realm="' . $realm . '", charset="UTF-8"');
     }
 
+    // Same shape as ResponseTrait::fail(), so API clients see one error format.
     private function error(ResponseInterface $response, int $status, string $message): ResponseInterface
     {
-        $response->setStatusCode($status);
-
-        return $response->setJSON([
-            'status'  => $status,
-            'error'   => $response->getReasonPhrase(),
-            'message' => $message,
+        return $response->setStatusCode($status)->setJSON([
+            'status'   => $status,
+            'error'    => $status,
+            'messages' => ['error' => $message],
         ]);
     }
 
